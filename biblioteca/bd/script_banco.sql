@@ -1,18 +1,57 @@
-DROP DATABASE mvcd;
-CREATE DATABASE mvcd;
+-- loja_GBD DATABASE
+DROP DATABASE IF EXISTS loja_GBD;
+CREATE DATABASE loja_GBD;
+USE loja_GBD;
 
-USE mvcd;
+-- TABLES FROM loja_GBD
+CREATE TABLE usuario(
+	idUsuario BIGINT(10) NOT NULL AUTO_INCREMENT,
+	rg BIGINT(10) NOT NULL,
+	nome VARCHAR(16) NOT NULL,
+	papel VARCHAR(5) NOT NULL,
+	PRIMARY KEY(idUsuario)
+);
 
-CREATE TABLE IF NOT EXISTS `mvcd`.`usuario` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(100) NOT NULL,
-  `senha` VARCHAR(100) NOT NULL,
-  `email` VARCHAR(100) NOT NULL,
-  `papel` VARCHAR(100) NOT NULL DEFAULT 'usuario'
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-AUTO_INCREMENT = 24
-DEFAULT CHARACTER SET = utf8
+CREATE TABLE produto(
+	codProduto BIGINT(10) NOT NULL AUTO_INCREMENT,
+	descricao VARCHAR(45) NOT NULL,
+	quantidade BIGINT(10) NOT NULL,
+	PRIMARY KEY(codProduto)
+);
 
-INSERT INTO `mvcd`.`usuario` (`nome`, `senha`, `email`, `papel`) VALUES ('admin', '123', 'admin@admin', 'admin');
-INSERT INTO `mvcd`.`usuario` (`nome`, `senha`, `email`, `papel`) VALUES ('usuario', '123', 'usuario@usuario', 'usuario');
+CREATE TABLE venda(
+	codVenda BIGINT(10) NOT NULL AUTO_INCREMENT,
+	idUsuario BIGINT(10) NOT NULL,
+	dataVenda DATE NOT NULL,
+	PRIMARY KEY(codVenda),
+	FOREIGN KEY (idUsuario) REFERENCES usuario(idUsuario) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+CREATE TABLE itemVenda(
+	codVenda BIGINT(10) NOT NULL,
+	codProduto BIGINT(10) NOT NULL,
+	quantidade BIGINT(10) NOT NULL,
+	PRIMARY KEY(codVenda, codProduto),
+	FOREIGN KEY(codVenda) REFERENCES venda(codVenda) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	FOREIGN KEY(codProduto) REFERENCES produto(codProduto) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+CREATE TABLE log_produto(
+	idLog BIGINT(10) NOT NULL AUTO_INCREMENT,
+	log_data DATETIME NOT NULL,
+	usuario VARCHAR(40) NOT NULL,
+	tipoOperacao VARCHAR(6) NOT NULL,
+	dadosAntigos VARCHAR (255) NOT NULL,
+	dadosNovos VARCHAR(255) NOT NULL,
+	PRIMARY KEY(idlog)
+);
+
+CREATE TABLE log_venda(
+	idLog BIGINT(10) NOT NULL AUTO_INCREMENT,
+	log_data DATETIME NOT NULL,
+	usuario VARCHAR(40) NOT NULL,
+	tipoOperacao VARCHAR(6) NOT NULL,
+	dadosAntigos VARCHAR (255) NOT NULL,
+	dadosNovos VARCHAR(255) NOT NULL,
+	PRIMARY KEY(idLog)
+);

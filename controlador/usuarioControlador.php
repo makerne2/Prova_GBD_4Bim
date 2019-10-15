@@ -10,9 +10,9 @@ function index() {
 function adicionar() {
     if (ehPost()) {
         $nome = $_POST["usuario"];
-        $email = $_POST["email"];
+        $rg = $_POST["rg"];
         $senha = $_POST["senha"];
-        alert(adicionarUsuario($nome, $email, $senha));
+        adicionarUsuario($nome, $rg, $senha);
         redirecionar("usuario/index");
     } else {
         exibir("usuario/formulario");
@@ -27,8 +27,8 @@ function deletar($id) {
 function editar($id) {
     if (ehPost()) {
         $nome = $_POST["nome"];
-        $email = $_POST["email"];
-        alert(editarUsuario($id, $nome, $email));
+        $rg = $_POST["rg"];
+        alert(editarUsuario($id, $nome, $rg));
         redirecionar("usuario/index");
     } else {
         $dados["usuario"] = pegarUsuarioPorId($id);
