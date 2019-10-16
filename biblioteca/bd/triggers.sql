@@ -112,18 +112,3 @@ DELIMITER $$
 		INSERT INTO log_venda VALUES(NULL, @DataVenda, @usuario, "UPDATE", @dadosAntigos, @dadosNovos);
 	END;$$
 DELIMITER ;
-
--- Delete LOGVENDA
-DROP TRIGGER IF EXISTS tr_remLogVenda;
-DELIMITER $$
-	CREATE TRIGGER tr_remLogVenda
-	BEFORE DELETE ON venda
-	FOR EACH ROW
-	BEGIN
-		SET @dadosAntigos = CONCAT(OLD.codVenda, " # ", OLD.idCliente, " # ", OLD.dataVenda);
-		SET @DataProduto = SYSDATE();
-		SET @usuario = CURRENT_USER();
-
-		INSERT INTO log_venda VALUES(NULL, @DataVenda, @usuario, "DELETE", @dadosAntigos, " - # - # - ");
-	END;$$
-DELIMITER ;

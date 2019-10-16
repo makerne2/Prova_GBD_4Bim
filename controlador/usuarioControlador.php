@@ -2,41 +2,67 @@
 
 require_once "modelo/usuarioModelo.php";
 
-function index() {
-    $dados["usuarios"] = pegarTodosUsuarios();
-    exibir("usuario/listar", $dados);
+/** admin */
+function index()
+{
+	$dados = array();
+	$dados["usuarios"] = allUsuario();
+	exibir("usuario/index", $dados);
 }
 
-function adicionar() {
-    if (ehPost()) {
-        $nome = $_POST["usuario"];
-        $rg = $_POST["rg"];
-        $senha = $_POST["senha"];
-        adicionarUsuario($nome, $rg, $senha);
-        redirecionar("usuario/index");
-    } else {
-        exibir("usuario/formulario");
-    }
+/** anon */
+function visualizar($id)
+{
+	$dados = array();
+	$dados["usuario"] = 	viewUsuario($id);
+	exibir("usuario/visualizar", $dados);
 }
 
+/** anon */
 function deletar($id) {
-    alert(deletarUsuario($id));
-    redirecionar("usuario/index");
+	delUsuario($id);
+	redirecionar("usuario/");
 }
 
-function editar($id) {
-    if (ehPost()) {
-        $nome = $_POST["nome"];
-        $rg = $_POST["rg"];
-        alert(editarUsuario($id, $nome, $rg));
-        redirecionar("usuario/index");
-    } else {
-        $dados["usuario"] = pegarUsuarioPorId($id);
-        exibir("usuario/formulario", $dados);
-    }
+/** anon */
+function adicionar()
+{
+	if (ehPost()) {
+		$nome = 		$_POST["nome"];
+		$rg = 			$_POST["rg"];
+		$senha = 		$_POST["senha"];
+
+		addUsuario(
+			$nome,
+			$rg,
+			$senha,
+			'user'
+		);
+
+		redirecionar("login/index");
+	} else {
+		exibir("usuario/cadastro");
+	}
 }
 
-function visualizar($id) {
-    $dados["usuario"] = pegarUsuarioPorId($id);
-    exibir("usuario/visualizar", $dados);
+/** anon */
+function editar($id)
+{
+	if (ehPost()) {
+		$nome = 		$_POST["nome"];
+		$rg = 			$_POST["rg"];
+		$senha = 		$_POST["senha"];
+
+		editUsuario(
+			$id,
+			$nome,
+			$rg,
+			$senha
+		);
+
+		redirecionar("usuario/visualizar/$id");
+	} else {
+		$dados["usuario"] = viewUsuario($id);
+		exibir("usuario/editar", $dados);
+	}
 }
